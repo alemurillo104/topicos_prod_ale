@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "651167205589",
+    "firebase_url": "https://topicosdatabase.firebaseio.com",
+    "project_id": "topicosdatabase",
+    "storage_bucket": "topicosdatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651167205589:android:bf10148b8e639604603a5c",
+        "android_client_info": {
+          "package_name": "com.example.topicos_productos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651167205589-3k5msh82dc5ri1b5j5bcmaip6t0c3s6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAotqn3a5bMqyeyzuo7D9Fab-D2OlWTVbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651167205589-3k5msh82dc5ri1b5j5bcmaip6t0c3s6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
