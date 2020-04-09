@@ -19,6 +19,7 @@ class Productos{
 
 Product productFromJson2(String key,String str) => Product.fromJsonkey(json.decode(key),json.decode(str));
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
+Product productFromJson3(String str) => Product.fromJson3(json.decode(str));
 
 
 Map<String, dynamic> productToJson(Product data) => data.toJson();
@@ -46,10 +47,18 @@ class Product {
         this.createdAt,
     });
 
+    factory Product.fromJson3(Map json) => Product(
+        
+        id:        json["id"].toString(),
+        nombre:    json["nombre"].toString(),
+        cantidad:  double.parse(json["cantidad"].toString()),
+        precio:    double.parse(json["precio"].toString()),
+        createdAt: json["createdAt"].toString(),
+    );
     factory Product.fromJson(Map<String, dynamic> json) => Product(
 
         id: json["id"].toString(),
-        nombre: json["nombre"],
+        nombre: json["nombre"].toString(),
         cantidad: double.parse(json["cantidad"].toString()),
         precio:   double.parse(json["precio"].toString()),
         createdAt: json["createdAt"].toString(),
@@ -58,7 +67,7 @@ class Product {
     factory Product.fromJsonkey(Map<String, dynamic> jsonKey, Map<String, dynamic> json) => Product.key(
         key: jsonKey["key"],
         id: json["id"].toString(),
-        nombre: json["nombre"],
+        nombre: json["nombre"].toString(),
         cantidad: double.parse(json["cantidad"].toString()),
         precio:   double.parse(json["precio"].toString()),
         createdAt: (json["createdAt"]).toString(),
@@ -67,7 +76,7 @@ class Product {
 
     Map<String, dynamic> toJson() => {
         "id": id.toString(),
-        "nombre": nombre,
+        "nombre": nombre.toString(),
         "cantidad": cantidad.toString(),
         "precio": precio.toString(),
         "createdAt": createdAt.toString(),

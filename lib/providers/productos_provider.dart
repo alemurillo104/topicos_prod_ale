@@ -21,6 +21,7 @@ class ProductosProvider{
    }
 
    final database = FirebaseDatabase.instance.reference();
+   final prodRef = FirebaseDatabase.instance.reference().child('productos');
    //final database = FirebaseDatabase();
 
    Future<List<Product>> getProductos() async { 
@@ -52,9 +53,17 @@ class ProductosProvider{
  
    }
 
-    void setProducto(Product producto){
+  void setProducto(Product producto){
     final json= productToJson(producto);
     database.child('productos').push().set(json);
-  } //si le pongo Future o algo asi me devuelve una funcion(funcion callback) 
-    //con la key del objeto insertado
+  } 
+
+  void updateProducto(String key,Product producto){
+    database.child('productos/'+key).update(productToJson(producto));
+  }
+  void delProduct(String key){
+    //print(key);
+    database.child('productos/'+key).remove();
+  }
+
 }
