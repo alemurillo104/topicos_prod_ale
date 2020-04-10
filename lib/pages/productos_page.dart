@@ -15,7 +15,7 @@ class ProductosPage extends StatefulWidget {
 }
 
 class _ProductosPageState extends State<ProductosPage> {
- //final globalKey = GlobalKey<ScaffoldState>(); 
+ final globalKey = GlobalKey<ScaffoldState>(); 
  
  final prodProvider= new ProductosProvider();
 
@@ -27,7 +27,6 @@ class _ProductosPageState extends State<ProductosPage> {
   @override
   void initState() {
     prodProvider.productosStream.listen((data) => {
-      //print(data),
       prodProvider.getProductos()
     });
     super.initState();
@@ -35,120 +34,47 @@ class _ProductosPageState extends State<ProductosPage> {
 
   @override
   Widget build(BuildContext context) {
-    //prodProvider.getProductos();
     return Scaffold(
-      primary: true,
-       //key: globalKey,
-       appBar: AppBar(
-         title: Text('Productos- Firebase'),
-         actions: <Widget>[
-         _iconInfo(context)
-        ],
-       ),
-       body: _listaProdu(context),
-       //body:_listaProdStream(context),
-        floatingActionButton: FloatingActionButton(
+      key: globalKey,
+      appBar: AppBar(
+        title: Text('Productos- Firebase'),
+        actions: <Widget>[_iconInfo(context)],
+      ),
+      body: _listaProdu(context),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showInput(context);
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
-        )
+      )
     );
   }
 
   Widget _listaProdu(BuildContext context){
     return FirebaseAnimatedList(
-      //query: prodProvider.prodRef.orderByPriority(),
-      query: prodProvider.prodRef.orderByKey(),
+      query: prodProvider.productosRef.orderByKey(),
       //query: prodProvider.prodRef.orderByChild('createdAt'),
       itemBuilder: (_, snapshot, Animation<double> animation,int x){
         Map dar=snapshot.value;
         final prod2=productFromJson3(json.encode(dar));
-       // final prod2= Product.fromJson3(snapshot.value);
-        //return _productItem(Product.fromSnapshot(key: snapshot.key, value: snapshot.value));
-        //print(dato.cantidad);
-        //añadido para dismiss
         final item=snapshot.key;
-        //print(item);
-        //return card(prod2,item);
         return Dismissible(
           background: Container(color: Colors.red),
           key: UniqueKey(),
-          //key: Key(item), 
+          child: card(prod2,context,item),
           onDismissed: (direction){
-
               prodProvider.delProduct(item);
-              //final snackBar = SnackBar(content:Text(prod2.nombre.toString() +" ha sido eliminado"));
-              //globalKey.currentState.showSnackBar(snackBar);
-          },
-          child: card(prod2,context,item)
-        );
-        //return card(prod2, context);
-        
-      },
-      defaultChild: Center(
-         child: CircularProgressIndicator(),
-      ),
-      reverse: true,
-
-    );
-  }
-   
-  /*
-  --//CON STREAMBUILDER TAMB DA, pero no ordenado 
-  
-  Widget _listaProdStream(BuildContext context) {
-   
-  prodProvider.getProductos();
-    return StreamBuilder(
-      stream: prodProvider.productosStream,
-      builder: (BuildContext context, AsyncSnapshot <List<Product>> snap) {
-        if (snap.hasData) {
-          //final da=snap.data ;
-          //print(da[0].nombre);
-          List<Product> productos=snap.data;
-          //print(productos.length);
-          return _cardSt(productos,context);
-          //print(productos[2].nombre);
-          //print(productos.length);
-          //return Text('hay data');
-        }else{
-          return Center(child: Text('Lista Vacia'),);
-        }
-      },
-    );
-  }
-  
-  Widget _cardSt(List<Product> _listaproductos, BuildContext context) {
- 
-   return ListView.builder(
-          shrinkWrap: true,
-          itemCount: _listaproductos.length,
-          itemBuilder: (BuildContext context, int index) {
-            //print(_listaproductos[index].key);
-             Product prod2= new Product.key(
-              key:_listaproductos[index].key ,
-              id: _listaproductos[index].id,
-              nombre: _listaproductos[index].nombre,
-              cantidad: _listaproductos[index].cantidad,
-              precio: _listaproductos[index].precio,
-              createdAt: _listaproductos[index].createdAt
-            );
-           /* Product prod= new Product(
-              id: _listaproductos[index].id,
-              nombre: _listaproductos[index].nombre,
-              cantidad: _listaproductos[index].cantidad,
-              precio: _listaproductos[index].precio,
-            );*/
-            return card(prod2);
+              final snackBar = SnackBar(content:Text(prod2.nombre.toString() +" ha sido eliminado"));
+              globalKey.currentState.showSnackBar(snackBar);
           }
-   );
+        );
+      },
+      defaultChild: Center(child: CircularProgressIndicator()),
+    );
   }
-  
- */
+   
   Widget card(Product producto, BuildContext context, String key){
-    
     return Card(
       elevation: 12.0,
       borderOnForeground: true,
@@ -157,30 +83,28 @@ class _ProductosPageState extends State<ProductosPage> {
         borderRadius: BorderRadius.circular(124.0),
         child: Container(
           child: ListTile(
-              //onTap: () =>_updateInput(context, producto) ,
               leading: Icon(Icons.add_comment) ,
               title: Text(producto.nombre, style: TextStyle(fontSize: 20.0)),
               subtitle: contenido(producto.id, producto.cantidad, producto.precio,producto.createdAt),
               trailing: _inputButton(context,producto,key),
           ),
           margin: EdgeInsets.all(10.0),
-          ),
+        ),
       ),
     );
   }
 
   
   Widget contenido(String id, double cantidad, double precio,String create) {
-    //print(create+'hey');
     if (create.toString()=='null') {
       return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Codigo: '+ id.toString()),
-        Text('Cantidad: '+ cantidad.toString()),
-        Text('Precio: '+ precio.toString()),
-      ],
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Codigo: '+ id.toString()),
+          Text('Cantidad: '+ cantidad.toString()),
+          Text('Precio: '+ precio.toString()),
+        ],
+      );
     }else{
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,10 +116,9 @@ class _ProductosPageState extends State<ProductosPage> {
         ],
       );
     }
-    
   }
 
-  //----waaa
+  //----Crear
   
   void _showInput(BuildContext context) async{
     _idController.clear();
@@ -288,7 +211,9 @@ class _ProductosPageState extends State<ProductosPage> {
       child: Icon(Icons.arrow_drop_down));
 
   }
+
   //---Actualizar
+
   void _updateInput(BuildContext context, Product producto,String key) async{
      await showDialog<String>(
         context: context,
@@ -385,42 +310,46 @@ class _ProductosPageState extends State<ProductosPage> {
 
   _infoText(BuildContext context) async {
     return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Usa la App'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text('1. Click en '),
-                  Container(
-                    width: 30.0, height: 30.0,
-                    child: FloatingActionButton(    
-                      onPressed: null, 
-                      child: Icon(Icons.add, color: Colors.white,)
-                    ),
-                  ),
-                  Text(' para añadir un'),                  
-                ],
-              ),
-              Text(' nuevo producto.'),
-              Text('2. Tap en algún producto para editarlo.'),
-              Text('3. Desliza algún producto a la derecha o izquierda para eliminarlo.')
-            ],
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Usa la App'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: _mensajes(),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Ok'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Widget> _mensajes(){
+    return [
+      Row(
+        children: <Widget>[
+          Text('1. Click en '),
+          Container(
+            width: 30.0, height: 30.0,
+            child: FloatingActionButton(    
+              onPressed: null, 
+              child: Icon(Icons.add, color: Colors.white,)
+            ),
           ),
+          Text(' para añadir un'),                  
         ],
-      );
-    },
-  );
+      ),
+      Text(' nuevo producto.'),
+      Text('2. Tap en algún producto para editarlo.'),
+      Text('3. Desliza algún producto a la derecha o izquierda para eliminarlo.')
+    ];
   }
 }

@@ -21,28 +21,15 @@ class ProductosProvider{
    }
 
    final database = FirebaseDatabase.instance.reference();
-   final prodRef = FirebaseDatabase.instance.reference().child('productos');
-   //final database = FirebaseDatabase();
+   final productosRef = FirebaseDatabase.instance.reference().child('productos');
+   
 
    Future<List<Product>> getProductos() async { 
-      /*final resp= await FirebaseDatabase.instance
-                .reference()
-                .child('productos')
-                .orderByChild('createdAt')
-                .limitToFirst(10)
-                .once();
-        */        
-      
-      //final wu= await resp.once();
-     // print(resp.value);
-      //DataSnapshot snap = await database.child('productos').orderByChild('createdAt').limitToFirst(10).once();
       DataSnapshot snap = await database.once();
       Map<dynamic,dynamic> dataS= snap.value['productos'];
-      //print(dataS);
-      final list=new Productos.fromJsonMap(dataS);
       
-      //print(list.items[0].createdAt);
-      //print(list.items[2].key);
+      final list=new Productos.fromJsonMap(dataS);
+
       final products= list.items;
 
       _productos.addAll(products);
@@ -62,7 +49,6 @@ class ProductosProvider{
     database.child('productos/'+key).update(productToJson(producto));
   }
   void delProduct(String key){
-    //print(key);
     database.child('productos/'+key).remove();
   }
 
